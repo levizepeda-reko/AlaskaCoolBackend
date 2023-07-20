@@ -1,7 +1,7 @@
-import strawberry
 import typing
-from models.index import users
+import strawberry
 from conn.db import conn
+from models.index import users
 from strawberry.types import Info
 
 @strawberry.type
@@ -10,16 +10,15 @@ class User:
     name: str
     email: str
     password: str
-
 @strawberry.type
 class Query:
     @strawberry.field
-    def user(self, info, id: int) -> User:
+    def user(id: int) -> User:
         return conn.execute(users.select().where(users.c.id == id)).fetchone()
     @strawberry.field
-    def users(self, info) -> typing.List[User]:
+    def users(self) -> typing.List[User]:
         return conn.execute(users.select()).fetchall()
-    
+
 @strawberry.type
 class Mutation:
     @strawberry.mutation
